@@ -1,0 +1,65 @@
+version: "3.8"
+
+services:
+#contenedor Base de Datos
+       db:
+        image: mongo
+        container_name: mongo_DB
+        restart: always
+        ports: 
+           - "3306:3306"
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: root123
+        volumes: 
+            - /mongo/data:/data/db
+
+
+#contenedor Interfaz de la Base de Datos
+       dbms:
+        image: mongo-express
+        container_name: mongo_express
+        restart: always
+        ports: 
+            - "8081:8081"
+        environment:
+            ME_CONFIG_BASICAUTH_USERNAME: admin
+            ME_CONFIG_BASICAUTH_PASSWORD: admin123
+            ME_CONFIG_MONGODB_SERVER: mongo_DB
+            ME_CONFIG_MONGODB_ADMINUSERNAME: root
+            ME_CONFIG_MONGODB_ADMINPASSWORD: root123
+            
+            
+#contenedor 1° Script de Python 
+       proceso:
+        build: ./proceso
+        container_name: proceso_py
+        depends_on:
+          - db
+        restart: on-failure
+        volumes:
+          - type: bind
+            source: ./proceso
+            target: /usr/src/app
+
+
+#contenedor 2° Script de Python 
+       api:
+        build: ./app
+        container_name: app_py
+        depends_on:
+          - db
+        ports: 
+            - "5000:5000"
+        restart: on-failure
+        volumes:
+          - type: bind
+            source: ./app
+            target: /usr/src/app
+
+#volumes:
+#  dblocal:
+
+
+
+

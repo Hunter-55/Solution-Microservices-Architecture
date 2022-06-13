@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios</title>
+    <style>
+        #hr{
+            box-shadow:        2px 2px 50px 15px rgb(255, 255, 255);
+            height:            3px;
+            border-width:      0;
+            color:           gray;
+            background-color:rgb(0, 153, 255);
+        }
+        #bienvenida{
+            color: white;
+        }
+        img{
+            width:  70px;
+            height: 70px;
+        }
+        #cerrar
+        {
+            background-color: red;
+        }
+        /******* Body *******/
+        body{
+            background:            url(../static/docker2.png);
+            background-color:    cornflowerblue;
+            background-repeat:     no-repeat;
+            background-attachment: fixed;
+            background-size:       cover;
+            
+        }
+        /******* Carta *******/
+        .carta{
+            display:         flex;
+            flex-direction:  column;
+            justify-content: space-between;
+            border:          2px solid rgb(255, 255, 255);
+            box-shadow:      3px 3px 35px 15px #ffffffc2;
+            border-radius:   20px;
+            font-family:     sans-serif;
+            /*-----------------------*/
+            width:           60%;
+            height:          400px;
+            margin-top:      20px;
+            scroll-behavior: smooth;
+        }
+        .pie{
+            background-color: rgba(5, 105, 97, 0.336);
+            color:            white;
+            border-radius:      20px;
+            height:             400px;
+            overflow:           auto;
+            text-align:         justify;
+        }
+        #tabla{
+            backdrop-filter: blur(1rem);
+        }
+    </style>
+</head>
+<body>
+    <div id="bienvenida">
+        <center>
+            <IMG SRC="../static/admin.png">
+            <h5>Usuario: {{usuario}}</h5>
+            <button id="cerrar" onclick="window.location='http://localhost:5000/'" type="submit">
+                Cerrar Sesión
+            </button>
+            <button onclick="window.location='http://localhost:5000/transacciones/type'" type="submit">
+                Transacciones
+            </button>
+            <input id="correoinput" name="correo" type="text" placeholder="   Ingresa Correo">
+            <button id="correobuttom" onclick="ruta()" type="submit">
+                Envíar
+            </button>
+        </center>
+    </div>
+    <hr id="hr" >
+    <div class="contenedor">
+        <center>
+            <div class="carta">
+                <div class="pie">
+                    <center>
+                        <table border="2px">
+                            <tr>
+                                <th>ID</th>
+                                <th>REFERENCIA</th>
+                                <th>FECHA</th>
+                                <th>MONTO</th>
+                                <th>TIPO</th>
+                                <th>CATEGORÍA</th>
+                                <th>CORREO ELECTRÓNICO</th>
+                            </tr>
+                            {% for dic in diccionario %}
+                                <div id="tabla">
+                                    <tr>
+                                        <td>{{dic['_id']}}</td>
+                                        <td>{{dic['reference']}}</td>
+                                        <td>{{dic['date']}}</td>
+                                        <td>{{dic['amount']}}</td>
+                                        <td>{{dic['type']}}</td>
+                                        <td>{{dic['category']}}</td>
+                                        <td>{{dic['user_email']}}</td>
+                                    </tr>
+                                </div>
+                            {% endfor %} 
+                        </table>
+                    </center>
+                </div>
+            </div>
+        </center>
+    </div>
+    <script>
+        function ruta()
+        {
+            var correoinput = document.getElementById('correoinput');
+            if (correoinput.value != "")
+            {
+                console.log(correoinput.value)
+                window.location='http://localhost:5000/monto/'+correoinput.value+'/summary'
+            } 
+        }
+    </script>
+</body>
+</html>
