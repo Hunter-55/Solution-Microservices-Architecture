@@ -31,17 +31,17 @@ def index():
     return render_template('index.html')
 
 #Se hace un llamado a la funcion del render_template
-def __ren_temp(dato):
+def ren_temp(dato):
     #retorna una redireccion html.
     return render_template('personas.html',diccionario=dato,usuario=session['usuario'])
 
 # muesta toda la colección
 @app.route('/personas')
 def personas():
-    return __ren_temp(__personas())
+    return ren_temp(personas())
 
 #Funcion que ejecuta el trabajo mostrar personas
-def __personas():
+def personas():
     tabla     = Conexion()
     coleccion = tabla.Mostrar_Datos()
     lista     = []
@@ -60,6 +60,7 @@ def test():
     lista     = []
     #Agrega los registros a la lista
     for col in coleccion.find():
+        col['_id'] = str(col['_id'])
         lista.append(col)
     #regresa un json de la coleccion en la base de datos
     return jsonify({'Data': lista})
@@ -67,10 +68,10 @@ def test():
 #Muestra las transacciones de inflow y outflow por usuario
 @app.route('/transacciones/<tipo>', methods=['GET','POST'])
 def transacciones(tipo):
-    return __ren_temp(__transacciones(tipo))
+    return ren_temp(transacciones(tipo))
 
 #Funcion que ejecuta el trabajo de las transacciones
-def __transacciones(tipo):
+def transacciones(tipo):
     #se hace un llamado a la url /transactions para conseguir un json de la bd
     response = app.test_client().get('/transactions')
     res      = json.loads(response.data.decode('utf-8')).get("Data")
@@ -109,7 +110,7 @@ def __transacciones(tipo):
     return list2
 
 #Funcion para generar un diccionario con categorias y sus valores dado un json apuntador
-def __categories(res,dict1,user_email):
+def categories(res,dict1,user_email):
     #ciclo para llenar un diccionario con las categorias y los valores
     for each in dict1:
         dict2 = {}
@@ -131,14 +132,14 @@ def __categories(res,dict1,user_email):
 #Muestra un summary de las categorias y sus valores de acuerdo al inflow/outflow del user_email recibido
 @app.route("/monto/<user_email>/summary")
 def monto(user_email):
-    return __ren_temp(__monto(user_email))
+    return ren_temp(monto(user_email))
 
 #Funcion principal para el summary del user_email. Esta funcion solamente recibe el email y manda a llamar a las demas
-def __monto(user_email):
+def monto(user_email):
     response = app.test_client().get('/transactions')
     res      = json.loads(response.data.decode('utf-8')).get("Data")
     dict1    = {"inflow": "", "outflow": ""}
-    dict1    = __categories(res,dict1,user_email)   
+    dict1    = categories(res,dict1,user_email)   
                 
     return dict1
 

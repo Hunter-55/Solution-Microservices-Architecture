@@ -11,8 +11,8 @@ services:
         environment:
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: root123
-        volumes: 
-            - /mongo/data:/data/db
+        #volumes: 
+        #    - /mongo/data:/data/db
 
 
 #contenedor Interfaz de la Base de Datos
