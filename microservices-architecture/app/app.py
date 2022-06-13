@@ -31,14 +31,14 @@ def index():
     return render_template('index.html')
 
 #Se hace un llamado a la funcion del render_template
-def ren_temp(dato):
+def ren_temp(dato,url,usuario):
     #retorna una redireccion html.
-    return render_template('personas.html',diccionario=dato,usuario=session['usuario'])
+    return render_template(url,diccionario=dato,usuario=usuario)
 
 # muesta toda la colección
 @app.route('/personas')
 def personas():
-    return ren_temp(personas())
+    return ren_temp(personas(),'personas.html',session['usuario'])
 
 #Funcion que ejecuta el trabajo mostrar personas
 def personas():
@@ -68,7 +68,7 @@ def test():
 #Muestra las transacciones de inflow y outflow por usuario
 @app.route('/transacciones/<tipo>', methods=['GET','POST'])
 def transacciones(tipo):
-    return ren_temp(transacciones(tipo))
+    return ren_temp(transacciones(tipo),'transacciones.html',session['usuario'])
 
 #Funcion que ejecuta el trabajo de las transacciones
 def transacciones(tipo):
@@ -132,7 +132,7 @@ def categories(res,dict1,user_email):
 #Muestra un summary de las categorias y sus valores de acuerdo al inflow/outflow del user_email recibido
 @app.route("/monto/<user_email>/summary")
 def monto(user_email):
-    return ren_temp(monto(user_email))
+    return ren_temp(monto(user_email),'monto.html',user_email)
 
 #Funcion principal para el summary del user_email. Esta funcion solamente recibe el email y manda a llamar a las demas
 def monto(user_email):
